@@ -1,3 +1,8 @@
 black[jupyter]
 flake8
 isort
+requests
+asyncio
+aiohttp
+aiofiles
+asyncpg
