@@ -1,0 +1,10 @@
+[tool.black]
+line-length = 80
+
+[tool.isort]
+profile = "black"
+line_length = 80
+
+[tool.ruff]
+line-length = 80
+lint.ignore = ["E203", "F811", "F401"]
