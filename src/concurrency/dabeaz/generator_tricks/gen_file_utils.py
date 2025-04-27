@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Any, Generator, Iterable, Iterator, TextIO
 
 
-def gen_find(file_pattern: str, root: str | Path):
-    yield from Path(root).rglob(file_pattern)
+def gen_find(file_pattern: str, root_dir: str | Path):
+    yield from Path(root_dir).rglob(file_pattern)
 
 
 def gen_open(paths: Iterable[Path]) -> Generator[TextIO, Any, None]:
@@ -27,3 +27,10 @@ def gen_cat(sources: Iterable[Iterable[str]]):
 def gen_grep(pattern: str, lines: Iterable[str]):
     compiled_pat = re.compile(pattern)
     return (line for line in lines if compiled_pat.search(line))
+
+
+def lines_from_dir(file_pattern: str, root_dir: str | Path):
+    files = Path(root_dir).rglob(file_pattern)
+    files_data = gen_open(files)
+    lines = gen_cat(files_data)
+    return lines
