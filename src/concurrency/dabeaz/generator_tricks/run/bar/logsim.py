@@ -3,16 +3,11 @@ import re
 import sys
 import time
 
-logpats = r"(\S+) (\S+) (\S+) \[(.*?)\] " r'"(\S+) (\S+) (\S+)" (\S+) (\S+)'
+log_file_name = "logs/access.log"
+lines = open(log_file_name)
+date_pattern = re.compile(r"\[(\d+)/(\w{3})/(\d+):(\d+):(\d+):(\d+) -(\d+)\]")
 
-logpat = re.compile(logpats)
-
-
-logfilename = "../../access-log"
-lines = open(logfilename)
-datepat = re.compile(r"\[(\d+)/(\w{3})/(\d+):(\d+):(\d+):(\d+) -(\d+)\]")
-
-lines_m = ((line, datepat.search(line)) for line in lines)
+lines_m = ((line, date_pattern.search(line)) for line in lines)
 
 
 months = {
@@ -30,10 +25,10 @@ months = {
     "Dec": 12,
 }
 
-lastdate = None
+last_date = None
 
 
-f_log = open("access-log", "w")
+f_log = open("logs/realtime-access-2.log", "w")
 for line, m in lines_m:
     assert m, "No match"
     day = int(m.group(1))
@@ -44,12 +39,12 @@ for line, m in lines_m:
     second = int(m.group(6))
 
     date = datetime.datetime(year, month, day, hour, minute, second)
-    if lastdate:
-        delta = date - lastdate
+    if last_date:
+        delta = date - last_date
 
         #        print delta.seconds
         time.sleep(delta.seconds / 25.0)
 
     print(line, file=f_log, end="")
     f_log.flush()
-    lastdate = date
+    last_date = date
